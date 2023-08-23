@@ -135,6 +135,13 @@
       },
       "url": "https://packages.unity.com"
     },
+    "pbunitymultiplayer": {
+      "version": "https://github.com/k1ng7layer/PBUnityMultiplayer.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "a1c7dea45f0803283547e0c26c5736e8e6f88cf9"
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,
