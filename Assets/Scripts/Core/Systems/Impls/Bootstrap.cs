@@ -12,6 +12,7 @@ namespace Core.Systems.Impls
         private readonly List<ILateSystem> _late = new();
         private readonly List<IFixedSystem> _fixed = new();
         private readonly List<IUpdateSystem> _update = new();
+        private readonly List<IInitializeSystem> _initializeSystems = new();
         
         private bool _isInitialized;
         private bool _isPaused;
@@ -22,6 +23,9 @@ namespace Core.Systems.Impls
             for (int i = 0; i < systems.Count; i++)
             {
                 var system = systems[i];
+                
+                if(system is IInitializeSystem initializeSystem)
+                    _initializeSystems.Add(initializeSystem);
                 
                 if(system is IFixedSystem fixedUpdate)
                     _fixed.Add(fixedUpdate);
