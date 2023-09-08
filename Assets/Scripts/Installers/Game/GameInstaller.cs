@@ -9,9 +9,7 @@ namespace Installers.Game
     {
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<CharacterPickTimerSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameStateProvider>().AsSingle();
-            Container.BindInterfacesAndSelfTo<UnityTimeProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<UnityTimeProvider>().AsSingle();
         }
     }

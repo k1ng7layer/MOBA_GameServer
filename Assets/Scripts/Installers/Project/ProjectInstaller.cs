@@ -1,5 +1,6 @@
 using PBUnityMultiplayer.Runtime.Core.Server;
 using PBUnityMultiplayer.Runtime.Core.Server.Impl;
+using Systems;
 using UnityEngine;
 using Zenject;
 
@@ -11,8 +12,8 @@ namespace Installers.Project
         
         public override void InstallBindings()
         {
-            Container.BindInterfacesTo<NetworkServerManager>().FromNewComponentOnNewPrefab(serverManager)
-                .AsSingle();
+            Container.Bind<INetworkServerManager>().To<NetworkServerManager>().FromNewComponentOnNewPrefab(serverManager)
+                .AsSingle().NonLazy();
         }
     }
 }

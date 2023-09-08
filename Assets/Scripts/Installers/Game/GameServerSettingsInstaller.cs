@@ -1,3 +1,5 @@
+using PBUnityMultiplayer.Runtime.Configuration.Connection;
+using PBUnityMultiplayer.Runtime.Configuration.Connection.Impl;
 using Settings.TimeSettings;
 using Settings.TimeSettings.Impl;
 using UnityEngine;
@@ -9,10 +11,12 @@ namespace Installers.Game
     public class GameServerSettingsInstaller : ScriptableObjectInstaller
     {
         [SerializeField] private SoTimeSettings timeSettings;
+        [SerializeField] private ScriptableNetworkConfiguration networkConfiguration;
         
         public override void InstallBindings()
         {
             Container.Bind<ITimeSettings>().FromInstance(timeSettings).AsSingle();
+            Container.Bind<INetworkConfiguration>().FromInstance(networkConfiguration).AsSingle();
         }
     }
 }
