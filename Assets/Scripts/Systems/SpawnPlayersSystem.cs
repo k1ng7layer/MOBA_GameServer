@@ -37,6 +37,7 @@ namespace Systems
             var spawnIndex = 0;
             
             var players = _playerProvider.RedTeam;
+            
             var teamSettings = teamType == ETeamType.Red
                 ? _gameFieldProvider.Field.RedTeamLevelSettings
                 : _gameFieldProvider.Field.BlueTeamLevelSettings;
@@ -53,6 +54,8 @@ namespace Systems
                 var spawnTransform = spawnTransformData.SpawnTransform;
                 
                 _networkServerManager.Spawn(player.CharacterId, client, spawnTransform.position, spawnTransform.rotation);
+
+                spawnIndex++;
             }
         }
     }
