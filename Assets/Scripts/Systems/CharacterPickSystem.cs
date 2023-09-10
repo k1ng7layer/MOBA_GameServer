@@ -4,6 +4,7 @@ using Messages;
 using PBUnityMultiplayer.Runtime.Core.Server;
 using Services.CharacterPick;
 using Services.GameState;
+using Services.PlayerProvider;
 using Systems.Abstract;
 
 namespace Systems
@@ -14,16 +15,19 @@ namespace Systems
         private readonly IGameStateProvider _gameStateProvider;
         private readonly ICharacterPickTimerProvider _characterPickTimerProvider;
         private readonly INetworkServerManager _serverManager;
+        private readonly IPlayerProvider _playerProvider;
 
         public CharacterPickSystem(
             IGameStateProvider gameStateProvider, 
             ICharacterPickTimerProvider characterPickTimerProvider,
-            INetworkServerManager serverManager
+            INetworkServerManager serverManager,
+            IPlayerProvider playerProvider
         ) : base(gameStateProvider)
         {
             _gameStateProvider = gameStateProvider;
             _characterPickTimerProvider = characterPickTimerProvider;
             _serverManager = serverManager;
+            _playerProvider = playerProvider;
         }
 
         protected override EGameState GameState => EGameState.CharacterPick;
@@ -51,12 +55,26 @@ namespace Systems
 
         private void OnPlayerCharacterSelect(CharacterSelectMessage characterSelectMessage)
         {
+            var playerId = characterSelectMessage.ClientId;
+            var hasPlayer = _playerProvider.TryGet(playerId, out var player);
             
+            if(!hasPlayer)
+                return;
+
+            var characterId = characterSelectMessage.CharacterId;
+
+            player.CharacterId = characterId;
         }
 
         private void OnCharacterPickAccepted(CharacterPickMessage characterPickMessage)
         {
+            var playerId = characterPickMessage.ClientId;
+            var hasPlayer = _playerProvider.TryGet(playerId, out var player);
             
+            if(!hasPlayer)
+                return;
+
+            player.CharacterLocked = true;
         }
     }
 }

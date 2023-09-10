@@ -11,6 +11,7 @@ namespace Installers.Game
             Container.BindInterfacesAndSelfTo<CharacterPickTimerSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<CharacterPickSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<CharacterPickFinalCountdownSystem>().AsSingle();
+            Container.BindInterfacesAndSelfTo<WaitForClientLoadingSystem>().AsSingle();
         }
     }
 }
