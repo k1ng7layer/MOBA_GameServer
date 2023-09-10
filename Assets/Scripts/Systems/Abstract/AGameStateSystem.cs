@@ -33,7 +33,11 @@ namespace Systems.Abstract
 
         void IDisposable.Dispose()
         {
+            OnDisposing();
             _gameStateProvider.GameStateChanged -= OnStateChanged;
         }
+
+        protected virtual void OnDisposing()
+        {}
     }
 }

@@ -7,5 +7,6 @@ namespace Services.CharacterPick
         float Value { get; }
         event Action Elapsed;
         void StartTimer();
+        void StartFinalCountdown();
     }
 }

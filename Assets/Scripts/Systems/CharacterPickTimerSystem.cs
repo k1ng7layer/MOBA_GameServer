@@ -34,6 +34,11 @@ namespace Systems
             _running = true;
         }
 
+        public void StartFinalCountdown()
+        {
+            
+        }
+
         public float Value { get; private set; }
 
         public void Update()

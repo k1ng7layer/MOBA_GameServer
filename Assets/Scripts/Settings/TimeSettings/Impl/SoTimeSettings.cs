@@ -7,7 +7,10 @@ namespace Settings.TimeSettings.Impl
         ITimeSettings
     {
         [SerializeField] private float characterPickTime;
+        [SerializeField] private float characterPickFinalStateTime;
 
         public float CharacterPickTime => characterPickTime;
+
+        public float CharacterPickFinalStateTime => characterPickFinalStateTime;
     }
 }
