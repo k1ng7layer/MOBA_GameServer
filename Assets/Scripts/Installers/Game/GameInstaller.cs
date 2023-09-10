@@ -1,4 +1,5 @@
 using Services.GameState.Impl;
+using Services.GameTimer.Impl;
 using Services.TimeProvider.Impl;
 using Systems;
 using Zenject;
@@ -11,6 +12,7 @@ namespace Installers.Game
         {
             Container.BindInterfacesAndSelfTo<GameStateProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<UnityTimeProvider>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GameTimerProvider>().AsSingle();
         }
     }
 }

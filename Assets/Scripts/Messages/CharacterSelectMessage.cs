@@ -1,5 +1,8 @@
+using System;
+
 namespace Messages
 {
+    [Serializable]
     public readonly struct CharacterSelectMessage
     {
         public readonly int ClientId;

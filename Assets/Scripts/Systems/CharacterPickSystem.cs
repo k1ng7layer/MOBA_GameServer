@@ -4,8 +4,6 @@ using Messages;
 using PBUnityMultiplayer.Runtime.Core.Server;
 using Services.CharacterPick;
 using Services.GameState;
-using Services.GameTimer;
-using Settings.TimeSettings;
 using Systems.Abstract;
 
 namespace Systems
@@ -16,22 +14,16 @@ namespace Systems
         private readonly IGameStateProvider _gameStateProvider;
         private readonly ICharacterPickTimerProvider _characterPickTimerProvider;
         private readonly INetworkServerManager _serverManager;
-        private readonly IGameTimerProvider _gameTimerProvider;
-        private readonly ITimeSettings _timeSettings;
 
         public CharacterPickSystem(
             IGameStateProvider gameStateProvider, 
             ICharacterPickTimerProvider characterPickTimerProvider,
-            INetworkServerManager serverManager,
-            IGameTimerProvider gameTimerProvider,
-            ITimeSettings timeSettings
+            INetworkServerManager serverManager
         ) : base(gameStateProvider)
         {
             _gameStateProvider = gameStateProvider;
             _characterPickTimerProvider = characterPickTimerProvider;
             _serverManager = serverManager;
-            _gameTimerProvider = gameTimerProvider;
-            _timeSettings = timeSettings;
         }
 
         protected override EGameState GameState => EGameState.CharacterPick;
@@ -54,15 +46,7 @@ namespace Systems
 
         private void BeginFinalCountdown()
         {
-            var finalTimer =
-                _gameTimerProvider.CreateTimer("PickFinalTimer", _timeSettings.CharacterPickFinalStateTime);
-
-            finalTimer.Elapsed += BeginLoadingState;
-        }
-
-        private void BeginLoadingState()
-        {
-            _gameStateProvider.SetState(EGameState.ClientLoading);
+            _gameStateProvider.SetState(EGameState.PreparingAfterPick);
         }
 
         private void OnPlayerCharacterSelect(CharacterSelectMessage characterSelectMessage)
@@ -73,11 +57,6 @@ namespace Systems
         private void OnCharacterPickAccepted(CharacterPickMessage characterPickMessage)
         {
             
-        }
-
-        protected override void OnDisposing()
-        {
-            _characterPickTimerProvider.Elapsed -= BeginFinalCountdown;
         }
     }
 }

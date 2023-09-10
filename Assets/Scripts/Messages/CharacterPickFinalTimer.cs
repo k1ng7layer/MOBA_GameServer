@@ -1,13 +1,13 @@
-using System;
+﻿using System;
 
 namespace Messages
 {
     [Serializable]
-    public readonly struct CharacterPickTimerMessage
+    public readonly struct CharacterPickFinalTimer
     {
         public readonly float Value;
 
-        public CharacterPickTimerMessage(float value)
+        public CharacterPickFinalTimer(float value)
         {
             Value = value;
         }

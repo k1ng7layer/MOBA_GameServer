@@ -5,6 +5,7 @@ using PBUnityMultiplayer.Runtime.Core.NetworkManager.Models;
 using PBUnityMultiplayer.Runtime.Core.Server;
 using Services;
 using Services.GameState;
+using UnityEngine;
 
 namespace Systems
 {
@@ -30,6 +31,8 @@ namespace Systems
         {
             _serverManager.StartServer();
             _serverManager.SeverAuthenticated += OnClientAuthenticated;
+            
+            Debug.Log($"server started");
         }
 
         private void OnClientAuthenticated(NetworkClient networkClient)
@@ -37,7 +40,6 @@ namespace Systems
             if (_serverManager.ConnectedClients.Count == _networkConfiguration.MaxClients)
             {
                _gameStateProvider.SetState(EGameState.CharacterPick);
-               
             }
         }
 
