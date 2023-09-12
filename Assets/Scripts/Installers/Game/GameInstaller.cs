@@ -9,7 +9,6 @@ namespace Installers.Game
     {
         public override void InstallBindings()
         {
-            Container.BindInterfacesAndSelfTo<GameStateProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<UnityTimeProvider>().AsSingle();
         }
     }

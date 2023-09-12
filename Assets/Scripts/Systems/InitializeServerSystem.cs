@@ -37,7 +37,6 @@ namespace Systems
             if (_serverManager.ConnectedClients.Count == _networkConfiguration.MaxClients)
             {
                _gameStateProvider.SetState(EGameState.CharacterPick);
-               
             }
         }
 

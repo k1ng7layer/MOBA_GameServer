@@ -1,5 +1,6 @@
 using PBUnityMultiplayer.Runtime.Core.Server;
 using PBUnityMultiplayer.Runtime.Core.Server.Impl;
+using Services.GameState.Impl;
 using Systems;
 using UnityEngine;
 using Zenject;
@@ -14,6 +15,8 @@ namespace Installers.Project
         {
             Container.Bind<INetworkServerManager>().To<NetworkServerManager>().FromNewComponentOnNewPrefab(serverManager)
                 .AsSingle().NonLazy();
+            
+            Container.BindInterfacesAndSelfTo<GameStateProvider>().AsSingle();
         }
     }
 }
