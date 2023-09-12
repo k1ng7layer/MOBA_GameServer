@@ -58,6 +58,7 @@ namespace Systems
 
         void IDisposable.Dispose()
         {
+            _serverManager.StopServer();
             _serverManager.SeverAuthenticated -= OnClientAuthenticated;
         }
     }

@@ -13,7 +13,8 @@ namespace Installers.Project
         
         public override void InstallBindings()
         {
-            Container.Bind<INetworkServerManager>().To<NetworkServerManager>().FromNewComponentOnNewPrefab(serverManager)
+            var server = Container.InstantiatePrefabForComponent<NetworkServerManager>(serverManager);
+            Container.Bind<INetworkServerManager>().To<NetworkServerManager>().FromInstance(server)
                 .AsSingle().NonLazy();
             
             Container.BindInterfacesAndSelfTo<GameStateProvider>().AsSingle();

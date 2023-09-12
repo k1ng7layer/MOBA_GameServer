@@ -35,17 +35,24 @@ namespace Systems
         protected override void OnStateChanged()
         {
             _characterPickTimerProvider.StartTimer();
-            _characterPickTimerProvider.Elapsed += BeginFinalCountdown;
+            //_characterPickTimerProvider.Elapsed += BeginFinalCountdown;
             
             _serverManager.RegisterMessageHandler<CharacterSelectMessage>(OnPlayerCharacterSelect);
             _serverManager.RegisterMessageHandler<CharacterPickMessage>(OnCharacterPickAccepted);
+
+            var message = new ServerGameState
+            {
+                gameStateId = (int)EGameState.CharacterPick
+            };
+            
+            _serverManager.SendMessage(message);
         }
 
         public void Update()
         {
-            var timer = _characterPickTimerProvider.Value;
-            
-            _serverManager.SendMessage(new CharacterPickTimerMessage(timer));
+            // var timer = _characterPickTimerProvider.Value;
+            //
+            // _serverManager.SendMessage(new CharacterPickTimerMessage(timer));
         }
 
         private void BeginFinalCountdown()

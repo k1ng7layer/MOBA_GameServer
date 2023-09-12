@@ -44,6 +44,11 @@ namespace Core.Systems.Impls
                 return;
             
             _isInitialized = true;
+
+            foreach (var initializeSystem in _initializeSystems)
+            {
+                initializeSystem.Initialize();
+            }
         }
         
         public void Tick()

@@ -22,4 +22,4 @@ MonoBehaviour:
   clientCheckAliveTime: 3000
   serverCheckAliveTime: 4000
   serverCheckAliveTimeSent: 2000
-  maxClients: 0
+  maxClients: 1

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Services.GameState.Impl
 {
@@ -24,6 +25,8 @@ namespace Services.GameState.Impl
                     listener.OnGameStateChanged();
                 }
             }
+            
+            Debug.Log($"[{nameof(GameStateProvider)}] set game state {gameState}");
         }
 
         public void AddGameStateListener(IGameStateListener gameStateListener)
