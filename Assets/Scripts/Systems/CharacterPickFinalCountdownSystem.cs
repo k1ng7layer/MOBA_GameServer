@@ -30,9 +30,9 @@ namespace Systems
             _networkServerManager = networkServerManager;
         }
 
-        protected override EGameState GameState => EGameState.PreparingAfterPick;
+        public override EGameState GameState => EGameState.PreparingAfterPick;
         
-        protected override void OnGameStateChanged()
+        protected override void OnStateChanged()
         {
             var finalTimer =
                 _gameTimerProvider.CreateTimer(TimerNames.PickFinalTimer, _timeSettings.CharacterPickFinalStateTime);

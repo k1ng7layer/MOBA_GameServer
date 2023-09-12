@@ -24,9 +24,9 @@ namespace Systems
             _gameFieldProvider = gameFieldProvider;
         }
 
-        protected override EGameState GameState => EGameState.Game;
+        public override EGameState GameState => EGameState.Game;
         
-        protected override void OnGameStateChanged()
+        protected override void OnStateChanged()
         {
             SpawnTeam(ETeamType.Blue);
             SpawnTeam(ETeamType.Red);

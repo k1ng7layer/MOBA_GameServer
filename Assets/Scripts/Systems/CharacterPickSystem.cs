@@ -30,9 +30,9 @@ namespace Systems
             _playerProvider = playerProvider;
         }
 
-        protected override EGameState GameState => EGameState.CharacterPick;
+        public override EGameState GameState => EGameState.CharacterPick;
         
-        protected override void OnGameStateChanged()
+        protected override void OnStateChanged()
         {
             _characterPickTimerProvider.StartTimer();
             _characterPickTimerProvider.Elapsed += BeginFinalCountdown;

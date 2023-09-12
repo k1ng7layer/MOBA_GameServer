@@ -22,9 +22,9 @@ namespace Systems
             _playerProvider = playerProvider;
         }
 
-        protected override EGameState GameState => EGameState.ClientLoading;
+        public override EGameState GameState => EGameState.ClientLoading;
         
-        protected override void OnGameStateChanged()
+        protected override void OnStateChanged()
         {
             //TODO: add loading timeout
             _networkServerManager.RegisterMessageHandler<ClientLoadingCompleteMessage>(OnClientLevelLoadingCompleted);
