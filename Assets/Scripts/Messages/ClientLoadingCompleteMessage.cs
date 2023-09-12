@@ -1,13 +1,13 @@
-using System;
+﻿using System;
 
 namespace Messages
 {
     [Serializable]
-    public readonly struct CharacterPickMessage
+    public readonly struct ClientLoadingCompleteMessage
     {
         public readonly int ClientId;
 
-        public CharacterPickMessage(int clientId)
+        public ClientLoadingCompleteMessage(int clientId)
         {
             ClientId = clientId;
         }

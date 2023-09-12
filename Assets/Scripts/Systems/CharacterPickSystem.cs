@@ -4,8 +4,7 @@ using Messages;
 using PBUnityMultiplayer.Runtime.Core.Server;
 using Services.CharacterPick;
 using Services.GameState;
-using Services.GameTimer;
-using Settings.TimeSettings;
+using Services.PlayerProvider;
 using Systems.Abstract;
 
 namespace Systems
@@ -16,22 +15,19 @@ namespace Systems
         private readonly IGameStateProvider _gameStateProvider;
         private readonly ICharacterPickTimerProvider _characterPickTimerProvider;
         private readonly INetworkServerManager _serverManager;
-        private readonly IGameTimerProvider _gameTimerProvider;
-        private readonly ITimeSettings _timeSettings;
+        private readonly IPlayerProvider _playerProvider;
 
         public CharacterPickSystem(
             IGameStateProvider gameStateProvider, 
             ICharacterPickTimerProvider characterPickTimerProvider,
             INetworkServerManager serverManager,
-            IGameTimerProvider gameTimerProvider,
-            ITimeSettings timeSettings
+            IPlayerProvider playerProvider
         ) : base(gameStateProvider)
         {
             _gameStateProvider = gameStateProvider;
             _characterPickTimerProvider = characterPickTimerProvider;
             _serverManager = serverManager;
-            _gameTimerProvider = gameTimerProvider;
-            _timeSettings = timeSettings;
+            _playerProvider = playerProvider;
         }
 
         protected override EGameState GameState => EGameState.CharacterPick;
@@ -54,30 +50,31 @@ namespace Systems
 
         private void BeginFinalCountdown()
         {
-            var finalTimer =
-                _gameTimerProvider.CreateTimer("PickFinalTimer", _timeSettings.CharacterPickFinalStateTime);
-
-            finalTimer.Elapsed += BeginLoadingState;
-        }
-
-        private void BeginLoadingState()
-        {
-            _gameStateProvider.SetState(EGameState.ClientLoading);
+            _gameStateProvider.SetState(EGameState.PreparingAfterPick);
         }
 
         private void OnPlayerCharacterSelect(CharacterSelectMessage characterSelectMessage)
         {
+            var playerId = characterSelectMessage.ClientId;
+            var hasPlayer = _playerProvider.TryGet(playerId, out var player);
             
+            if(!hasPlayer)
+                return;
+
+            var characterId = characterSelectMessage.CharacterId;
+
+            player.CharacterId = characterId;
         }
 
         private void OnCharacterPickAccepted(CharacterPickMessage characterPickMessage)
         {
+            var playerId = characterPickMessage.ClientId;
+            var hasPlayer = _playerProvider.TryGet(playerId, out var player);
             
-        }
+            if(!hasPlayer)
+                return;
 
-        protected override void OnDisposing()
-        {
-            _characterPickTimerProvider.Elapsed -= BeginFinalCountdown;
+            player.CharacterLocked = true;
         }
     }
 }

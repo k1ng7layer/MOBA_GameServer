@@ -10,6 +10,9 @@ namespace Installers.Game
             Container.BindInterfacesAndSelfTo<InitializeServerSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<CharacterPickTimerSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<CharacterPickSystem>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CharacterPickFinalCountdownSystem>().AsSingle();
+            Container.BindInterfacesAndSelfTo<WaitForClientLoadingSystem>().AsSingle();
+            Container.BindInterfacesAndSelfTo<SpawnPlayersSystem>().AsSingle();
         }
     }
 }
