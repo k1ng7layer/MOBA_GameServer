@@ -8,7 +8,7 @@ namespace Settings.LevelSettings
     [Serializable]
     public class TeamLevelSettings
     {
-        [KeyValue(nameof(PlayerSpawnTransform.PlayerId))]
+        [KeyValue(nameof(PlayerSpawnTransform.playerId))]
         public List<PlayerSpawnTransform> teamPlayersSpawnTransforms;
     }
 }

@@ -51,7 +51,7 @@ namespace Systems
                     continue;
                 
                 var spawnTransformData = teamSettings.teamPlayersSpawnTransforms[spawnIndex];
-                var spawnTransform = spawnTransformData.SpawnTransform;
+                var spawnTransform = spawnTransformData.spawnTransform;
                 
                 _networkServerManager.Spawn(player.CharacterId, client, spawnTransform.position, spawnTransform.rotation);
 

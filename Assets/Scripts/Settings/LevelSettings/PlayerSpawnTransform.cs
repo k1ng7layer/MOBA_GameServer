@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Settings.LevelSettings
 {
+    [Serializable]
     public class PlayerSpawnTransform
     {
-        public int PlayerId;
-        public Transform SpawnTransform;
+        public int playerId;
+        public Transform spawnTransform;
     }
 }
