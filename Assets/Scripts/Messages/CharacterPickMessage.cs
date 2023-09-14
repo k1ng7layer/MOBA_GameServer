@@ -3,13 +3,9 @@ using System;
 namespace Messages
 {
     [Serializable]
-    public readonly struct CharacterPickMessage
+    public struct CharacterPickMessage
     {
-        public readonly int ClientId;
-
-        public CharacterPickMessage(int clientId)
-        {
-            ClientId = clientId;
-        }
+        public int ClientId;
+        public int CharacterId;
     }
 }

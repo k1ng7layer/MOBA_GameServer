@@ -6,6 +6,7 @@ using Services.CharacterPick;
 using Services.GameState;
 using Services.PlayerProvider;
 using Systems.Abstract;
+using UnityEngine;
 
 namespace Systems
 {
@@ -64,7 +65,7 @@ namespace Systems
         {
             var playerId = characterSelectMessage.ClientId;
             var hasPlayer = _playerProvider.TryGet(playerId, out var player);
-            
+            Debug.Log($"OnPlayerCharacterSelect, playerId = {playerId}");
             if(!hasPlayer)
                 return;
 
@@ -77,11 +78,12 @@ namespace Systems
         {
             var playerId = characterPickMessage.ClientId;
             var hasPlayer = _playerProvider.TryGet(playerId, out var player);
-            
+            Debug.Log($"OnPlayerCharacterSelect, playerId = {playerId}");
             if(!hasPlayer)
                 return;
 
             player.CharacterLocked = true;
+            player.CharacterId = characterPickMessage.CharacterId;
         }
     }
 }
