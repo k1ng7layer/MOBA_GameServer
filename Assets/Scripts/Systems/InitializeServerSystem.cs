@@ -38,12 +38,12 @@ namespace Systems
         public void Initialize()
         {
             _serverManager.StartServer();
-            _serverManager.SeverAuthenticated += OnClientAuthenticated;
+            _serverManager.ClientReadyToWork += OnClientReady;
             
             Debug.Log($"server started");
         }
 
-        private void OnClientAuthenticated(NetworkClient networkClient)
+        private void OnClientReady(NetworkClient networkClient)
         {
             var team = _teamProvider.GetTeamType();
             var player = new Player(networkClient.Id, team);
@@ -59,7 +59,7 @@ namespace Systems
         void IDisposable.Dispose()
         {
             _serverManager.StopServer();
-            _serverManager.SeverAuthenticated -= OnClientAuthenticated;
+            _serverManager.ClientReadyToWork -= OnClientReady;
         }
     }
 }
