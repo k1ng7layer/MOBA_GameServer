@@ -1,4 +1,5 @@
-﻿using PBUnityMultiplayer.Runtime.Core.Server;
+﻿using System.Collections.Generic;
+using PBUnityMultiplayer.Runtime.Core.Server;
 using Services.GameField;
 using Services.GameState;
 using Services.PlayerProvider;
@@ -35,14 +36,14 @@ namespace Systems
         private void SpawnTeam(ETeamType teamType)
         {
             var spawnIndex = 0;
-            
-            var players = _playerProvider.RedTeam;
+
+            var playerList = teamType == ETeamType.Red ? _playerProvider.RedTeam : _playerProvider.BlueTeam;
             
             var teamSettings = teamType == ETeamType.Red
                 ? _gameFieldProvider.Field.RedTeamLevelSettings
                 : _gameFieldProvider.Field.BlueTeamLevelSettings;
             
-            foreach (var player in players)
+            foreach (var player in playerList)
             {
                 var clients = _networkServerManager.ConnectedClients;
                 var hasClient = clients.TryGetValue(player.Id, out var client);

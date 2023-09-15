@@ -72,6 +72,7 @@ namespace Systems
             var characterId = characterSelectMessage.CharacterId;
 
             player.CharacterId = characterId;
+            
         }
 
         private void OnCharacterPickAccepted(CharacterPickMessage characterPickMessage)
@@ -84,6 +85,26 @@ namespace Systems
 
             player.CharacterLocked = true;
             player.CharacterId = characterPickMessage.CharacterId;
+
+            var lobbyIsReady = CheckAllPlayersPicked();
+
+            if (lobbyIsReady)
+            {
+                _gameStateProvider.SetState(EGameState.ClientLoading);
+            }
+        }
+
+        private bool CheckAllPlayersPicked()
+        {
+            var players = _playerProvider.Players;
+
+            foreach (var player in players.Values)
+            {
+                if (!player.CharacterLocked)
+                    return false;
+            }
+
+            return true;
         }
     }
 }

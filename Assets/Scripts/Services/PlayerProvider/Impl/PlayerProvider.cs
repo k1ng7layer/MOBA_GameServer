@@ -28,6 +28,10 @@ namespace Services.PlayerProvider.Impl
         public void AddPlayer(Player player)
         {
             _players.Add(player.Id, player);
+            
+            if (player.TeamType == ETeamType.Blue)
+                _blueTeam.Add(player);
+            else _redTeam.Add(player);
         }
     }
 }

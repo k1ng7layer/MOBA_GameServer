@@ -28,6 +28,11 @@ namespace Systems
         {
             //TODO: add loading timeout
             _networkServerManager.RegisterMessageHandler<ClientLoadingCompleteMessage>(OnClientLevelLoadingCompleted);
+            var message = new ServerGameState()
+            {
+                gameStateId = (int)EGameState.ClientLoading
+            };
+            _networkServerManager.SendMessage(message);
         }
 
         private void OnClientLevelLoadingCompleted(ClientLoadingCompleteMessage message)
