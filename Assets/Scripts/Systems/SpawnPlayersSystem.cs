@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Messages;
 using PBUnityMultiplayer.Runtime.Core.Server;
 using Services.GameField;
 using Services.GameState;
@@ -54,7 +55,12 @@ namespace Systems
                 var spawnTransformData = teamSettings.teamPlayersSpawnTransforms[spawnIndex];
                 var spawnTransform = spawnTransformData.spawnTransform;
                 
-                _networkServerManager.Spawn(player.CharacterId, client, spawnTransform.position, spawnTransform.rotation);
+                var spawnMessage = new CharacterSpawnMessage
+                {
+                    CharacterId = player.CharacterId,
+                    ClientId = player.Id
+                };
+                _networkServerManager.Spawn(player.CharacterId, client, spawnTransform.position, spawnTransform.rotation, spawnMessage);
 
                 spawnIndex++;
             }
