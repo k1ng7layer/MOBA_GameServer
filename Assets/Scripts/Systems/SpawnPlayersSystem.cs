@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
 using Messages;
+using Models;
+using PBUnityMultiplayer.Runtime.Core.NetworkObjects;
 using PBUnityMultiplayer.Runtime.Core.Server;
+using Services.CharacterPick;
 using Services.GameField;
 using Services.GameState;
 using Services.PlayerProvider;
 using Systems.Abstract;
+using Views.Character.Impl;
 
 namespace Systems
 {
@@ -13,17 +17,20 @@ namespace Systems
         private readonly IPlayerProvider _playerProvider;
         private readonly INetworkServerManager _networkServerManager;
         private readonly IGameFieldProvider _gameFieldProvider;
+        private readonly IPickProvider _pickProvider;
 
         public SpawnPlayersSystem(
             IGameStateProvider gameStateProvider, 
             IPlayerProvider playerProvider,
             INetworkServerManager networkServerManager,
-            IGameFieldProvider gameFieldProvider
+            IGameFieldProvider gameFieldProvider,
+            IPickProvider pickProvider
         ) : base(gameStateProvider)
         {
             _playerProvider = playerProvider;
             _networkServerManager = networkServerManager;
             _gameFieldProvider = gameFieldProvider;
+            _pickProvider = pickProvider;
         }
 
         public override EGameState GameState => EGameState.Game;
@@ -32,6 +39,11 @@ namespace Systems
         {
             SpawnTeam(ETeamType.Blue);
             SpawnTeam(ETeamType.Red);
+        }
+
+        protected override void OnInitialize()
+        {
+            //_networkServerManager.RegisterSpawnHandler<CharacterSpawnMessage>(OnCharacterSpawned);
         }
 
         private void SpawnTeam(ETeamType teamType)
@@ -44,10 +56,16 @@ namespace Systems
                 ? _gameFieldProvider.Field.RedTeamLevelSettings
                 : _gameFieldProvider.Field.BlueTeamLevelSettings;
             
-            foreach (var player in playerList)
+            foreach (var characterKvp in _pickProvider.PickTable)
             {
+                var playerId = characterKvp.Key;
+                var characterDto = characterKvp.Value;
+                var characterId = characterDto.Id;
+                
                 var clients = _networkServerManager.ConnectedClients;
-                var hasClient = clients.TryGetValue(player.Id, out var client);
+                var hasClient = clients.TryGetValue(playerId, out var client);
+                
+                var player = _playerProvider.Players[playerId];
                 
                 if(!hasClient)
                     continue;
@@ -57,13 +75,26 @@ namespace Systems
                 
                 var spawnMessage = new CharacterSpawnMessage
                 {
-                    CharacterId = player.CharacterId,
-                    ClientId = player.Id
+                    CharacterId = characterId,
+                    ClientId = playerId
                 };
-                _networkServerManager.Spawn(player.CharacterId, client, spawnTransform.position, spawnTransform.rotation, spawnMessage);
-
+                
+                var characterNetworkObject = _networkServerManager.Spawn(characterKvp.Value.Id, client, spawnTransform.position, spawnTransform.rotation, spawnMessage);
+            
                 spawnIndex++;
+                
+                OnCharacterSpawned(characterNetworkObject, characterDto, player);
             }
+        }
+
+        private void OnCharacterSpawned(NetworkObject networkObject,
+            CharacterDto characterDto, Player player)
+        {
+            var view = networkObject.GetComponent<CharacterView>();
+
+            var character = new Character(view, characterDto.Name, characterDto.Id);
+            
+            player.SetCharacter(character);
         }
     }
 }

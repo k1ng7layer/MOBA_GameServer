@@ -1,4 +1,5 @@
 using Core.Systems.Impls;
+using Services.CharacterPick.Impl;
 using Services.GameField;
 using Services.GameField.Impl;
 using Services.GameState.Impl;
@@ -22,6 +23,7 @@ namespace Installers.Game
             Container.BindInterfacesAndSelfTo<GameTimerProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<RandomTeamProvider>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PickProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<Bootstrap>().AsSingle();
 
             var gameFieldProvider = new GameFieldProvider(gameField);
