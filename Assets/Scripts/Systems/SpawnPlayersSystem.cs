@@ -3,98 +3,58 @@ using Messages;
 using Models;
 using PBUnityMultiplayer.Runtime.Core.NetworkObjects;
 using PBUnityMultiplayer.Runtime.Core.Server;
-using Services.CharacterPick;
-using Services.GameField;
+using Services.CharacterSpawn;
 using Services.GameState;
 using Services.PlayerProvider;
+using Signals;
 using Systems.Abstract;
 using Views.Character.Impl;
 
 namespace Systems
 {
-    public class SpawnPlayersSystem : AGameStateSystem
+    public class SpawnTeamSystem : AGameStateSystem
     {
-        private readonly IPlayerProvider _playerProvider;
+        private readonly ITeamSpawnService _teamSpawnService;
         private readonly INetworkServerManager _networkServerManager;
-        private readonly IGameFieldProvider _gameFieldProvider;
-        private readonly IPickProvider _pickProvider;
 
-        public SpawnPlayersSystem(
-            IGameStateProvider gameStateProvider, 
-            IPlayerProvider playerProvider,
-            INetworkServerManager networkServerManager,
-            IGameFieldProvider gameFieldProvider,
-            IPickProvider pickProvider
+        public SpawnTeamSystem(
+            IGameStateProvider gameStateProvider,
+            ITeamSpawnService teamSpawnService,
+            INetworkServerManager networkServerManager
         ) : base(gameStateProvider)
         {
-            _playerProvider = playerProvider;
+            _teamSpawnService = teamSpawnService;
             _networkServerManager = networkServerManager;
-            _gameFieldProvider = gameFieldProvider;
-            _pickProvider = pickProvider;
         }
 
         public override EGameState GameState => EGameState.Game;
         
         protected override void OnStateChanged()
         {
-            SpawnTeam(ETeamType.Blue);
-            SpawnTeam(ETeamType.Red);
-        }
+            var redTeam = _teamSpawnService.Spawn(ETeamType.Red);
+            var blueTeam = _teamSpawnService.Spawn(ETeamType.Blue);
 
-        protected override void OnInitialize()
-        {
-            //_networkServerManager.RegisterSpawnHandler<CharacterSpawnMessage>(OnCharacterSpawned);
-        }
-
-        private void SpawnTeam(ETeamType teamType)
-        {
-            var spawnIndex = 0;
-
-            var playerList = teamType == ETeamType.Red ? _playerProvider.RedTeam : _playerProvider.BlueTeam;
-            
-            var teamSettings = teamType == ETeamType.Red
-                ? _gameFieldProvider.Field.RedTeamLevelSettings
-                : _gameFieldProvider.Field.BlueTeamLevelSettings;
-            
-            foreach (var characterKvp in _pickProvider.PickTable)
+            foreach (var character in redTeam)
             {
-                var playerId = characterKvp.Key;
-                var characterDto = characterKvp.Value;
-                var characterId = characterDto.Id;
-                
-                var clients = _networkServerManager.ConnectedClients;
-                var hasClient = clients.TryGetValue(playerId, out var client);
-                
-                var player = _playerProvider.Players[playerId];
-                
-                if(!hasClient)
-                    continue;
-                
-                var spawnTransformData = teamSettings.teamPlayersSpawnTransforms[spawnIndex];
-                var spawnTransform = spawnTransformData.spawnTransform;
-                
                 var spawnMessage = new CharacterSpawnMessage
                 {
-                    CharacterId = characterId,
-                    ClientId = playerId
+                    ClientId = character.OwnerId,
+                    CharacterId = character.PrefabId,
                 };
                 
-                var characterNetworkObject = _networkServerManager.Spawn(characterKvp.Value.Id, client, spawnTransform.position, spawnTransform.rotation, spawnMessage);
-            
-                spawnIndex++;
-                
-                OnCharacterSpawned(characterNetworkObject, characterDto, player);
+                _networkServerManager.SendMessage(spawnMessage);
             }
-        }
-
-        private void OnCharacterSpawned(NetworkObject networkObject,
-            CharacterDto characterDto, Player player)
-        {
-            var view = networkObject.GetComponent<CharacterView>();
-
-            var character = new Character(view, characterDto.Name, characterDto.Id);
             
-            player.SetCharacter(character);
+            foreach (var character in blueTeam)
+            {
+                var spawnMessage = new CharacterSpawnMessage
+                {
+                    ClientId = character.OwnerId,
+                    CharacterId = character.PrefabId,
+                };
+                
+                _networkServerManager.SendMessage(spawnMessage);
+            }
         }
     }
 }

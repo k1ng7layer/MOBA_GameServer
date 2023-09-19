@@ -5,15 +5,9 @@ namespace Models
 {
     public class Character
     {
-        public Character(
-            ICharacterView characterView, 
-            string name, 
-            int id
-        )
+        public Character(string name)
         {
-            CharacterView = characterView;
-            Name = name;
-            ID = id;
+            
         }
         
         public ICharacterView CharacterView { get; }
