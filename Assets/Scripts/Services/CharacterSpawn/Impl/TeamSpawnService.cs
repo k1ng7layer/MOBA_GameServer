@@ -7,6 +7,7 @@ using Services.CharacterPick;
 using Services.GameField;
 using Services.PlayerProvider;
 using Signals;
+using UniRx;
 using UnityEngine;
 using Views.Character.Impl;
 
@@ -17,6 +18,7 @@ namespace Services.CharacterSpawn.Impl
         private readonly INetworkServerManager _networkServerManager;
         private readonly IGameFieldProvider _gameFieldProvider;
         private readonly IPickProvider _pickProvider;
+        private readonly ReactiveCommand<List<CharacterView>> _teamSpawned = new();
 
         public TeamSpawnService(
             INetworkServerManager networkServerManager,
@@ -29,7 +31,7 @@ namespace Services.CharacterSpawn.Impl
             _pickProvider = pickProvider;
         }
 
-        public event Action<List<CharacterView>> TeamSpawned;
+        public IReactiveCommand<List<CharacterView>> TeamSpawned => _teamSpawned;
 
         public List<CharacterView> Spawn(ETeamType type)
         {
@@ -73,7 +75,7 @@ namespace Services.CharacterSpawn.Impl
                 result.Add(view);
             }
 
-            TeamSpawned?.Invoke(result);
+            TeamSpawned?.Execute(result);
             
             return result;
         }

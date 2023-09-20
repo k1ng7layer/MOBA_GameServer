@@ -14,6 +14,7 @@ namespace Installers.Game
             Container.BindInterfacesAndSelfTo<WaitForClientLoadingSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<SpawnTeamSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerDestinationSystem>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CharacterProcessSystem>().AsSingle();
         }
     }
 }

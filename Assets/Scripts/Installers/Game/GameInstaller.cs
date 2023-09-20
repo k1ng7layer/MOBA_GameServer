@@ -1,4 +1,6 @@
 using Core.Systems.Impls;
+using Factories.Character;
+using Presenters;
 using Services.CharacterPick.Impl;
 using Services.CharacterSpawn.Impl;
 using Services.GameField;
@@ -10,6 +12,7 @@ using Services.Team.Impl;
 using Services.TimeProvider.Impl;
 using Systems;
 using UnityEngine;
+using Views.Character.Impl;
 using Zenject;
 
 namespace Installers.Game
@@ -30,6 +33,9 @@ namespace Installers.Game
 
             var gameFieldProvider = new GameFieldProvider(gameField);
             Container.Bind<IGameFieldProvider>().To<GameFieldProvider>().FromInstance(gameFieldProvider);
+
+            Container.BindFactory<CharacterView, Models.Character, CharacterPresenter, CharacterPresenterFactory>().AsSingle();
+            Container.BindFactory<Models.Character, CharacterFactory>().AsSingle();
         }
     }
 }

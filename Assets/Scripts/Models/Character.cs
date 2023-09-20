@@ -5,11 +5,6 @@ namespace Models
 {
     public class Character
     {
-        public Character(string name)
-        {
-            
-        }
-        
         public ICharacterView CharacterView { get; }
         public string Name { get; }
         public int ID { get; }
