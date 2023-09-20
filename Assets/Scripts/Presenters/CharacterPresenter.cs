@@ -1,5 +1,7 @@
-﻿using PBUnityMultiplayer.Runtime.Core.Client;
+﻿using Messages;
+using PBUnityMultiplayer.Runtime.Core.Client;
 using PBUnityMultiplayer.Runtime.Core.Server;
+using UnityEngine;
 using UnityEngine.TextCore.Text;
 using Views.Character;
 using Views.Character.Impl;
@@ -27,7 +29,13 @@ namespace Presenters
 
         public void Initialize()
         {
-            _networkServerManager
+            _networkServerManager.RegisterMessageHandler<PlayerDestinationMessage>(OnPlayerDestinationRequestReceived);
+        }
+        
+        private void OnPlayerDestinationRequestReceived(PlayerDestinationMessage message)
+        {
+            var destination = new Vector3(message.X, message.Y, message.Z);
+            _character.SetDestination(destination);
         }
     }
 }
