@@ -1,68 +1,59 @@
 ﻿using System.Collections.Generic;
 using Messages;
+using Models;
+using PBUnityMultiplayer.Runtime.Core.NetworkObjects;
 using PBUnityMultiplayer.Runtime.Core.Server;
-using Services.GameField;
+using Services.CharacterSpawn;
 using Services.GameState;
 using Services.PlayerProvider;
+using Signals;
 using Systems.Abstract;
+using Views.Character.Impl;
 
 namespace Systems
 {
-    public class SpawnPlayersSystem : AGameStateSystem
+    public class SpawnTeamSystem : AGameStateSystem
     {
-        private readonly IPlayerProvider _playerProvider;
+        private readonly ITeamSpawnService _teamSpawnService;
         private readonly INetworkServerManager _networkServerManager;
-        private readonly IGameFieldProvider _gameFieldProvider;
 
-        public SpawnPlayersSystem(
-            IGameStateProvider gameStateProvider, 
-            IPlayerProvider playerProvider,
-            INetworkServerManager networkServerManager,
-            IGameFieldProvider gameFieldProvider
+        public SpawnTeamSystem(
+            IGameStateProvider gameStateProvider,
+            ITeamSpawnService teamSpawnService,
+            INetworkServerManager networkServerManager
         ) : base(gameStateProvider)
         {
-            _playerProvider = playerProvider;
+            _teamSpawnService = teamSpawnService;
             _networkServerManager = networkServerManager;
-            _gameFieldProvider = gameFieldProvider;
         }
 
         public override EGameState GameState => EGameState.Game;
         
         protected override void OnStateChanged()
         {
-            SpawnTeam(ETeamType.Blue);
-            SpawnTeam(ETeamType.Red);
-        }
+            var redTeam = _teamSpawnService.Spawn(ETeamType.Red);
+            var blueTeam = _teamSpawnService.Spawn(ETeamType.Blue);
 
-        private void SpawnTeam(ETeamType teamType)
-        {
-            var spawnIndex = 0;
-
-            var playerList = teamType == ETeamType.Red ? _playerProvider.RedTeam : _playerProvider.BlueTeam;
-            
-            var teamSettings = teamType == ETeamType.Red
-                ? _gameFieldProvider.Field.RedTeamLevelSettings
-                : _gameFieldProvider.Field.BlueTeamLevelSettings;
-            
-            foreach (var player in playerList)
+            foreach (var character in redTeam)
             {
-                var clients = _networkServerManager.ConnectedClients;
-                var hasClient = clients.TryGetValue(player.Id, out var client);
-                
-                if(!hasClient)
-                    continue;
-                
-                var spawnTransformData = teamSettings.teamPlayersSpawnTransforms[spawnIndex];
-                var spawnTransform = spawnTransformData.spawnTransform;
-                
                 var spawnMessage = new CharacterSpawnMessage
                 {
-                    CharacterId = player.CharacterId,
-                    ClientId = player.Id
+                    ClientId = character.OwnerId,
+                    CharacterId = character.PrefabId,
                 };
-                _networkServerManager.Spawn(player.CharacterId, client, spawnTransform.position, spawnTransform.rotation, spawnMessage);
-
-                spawnIndex++;
+                
+                _networkServerManager.SendMessage(spawnMessage);
+            }
+            
+            foreach (var character in blueTeam)
+            {
+                var spawnMessage = new CharacterSpawnMessage
+                {
+                    ClientId = character.OwnerId,
+                    CharacterId = character.PrefabId,
+                };
+                
+                _networkServerManager.SendMessage(spawnMessage);
             }
         }
     }

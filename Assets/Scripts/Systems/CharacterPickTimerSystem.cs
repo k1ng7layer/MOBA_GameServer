@@ -2,15 +2,14 @@ using System;
 using Core.Systems;
 using Messages;
 using PBUnityMultiplayer.Runtime.Core.Server;
-using Services.CharacterPick;
 using Services.TimeProvider;
 using Settings.TimeSettings;
 
 namespace Systems
 {
     public class CharacterPickTimerSystem :
-        IUpdateSystem,
-        ICharacterPickTimerProvider
+        IUpdateSystem
+        //ICharacterPickTimerProvider
     {
         private readonly ITimeProvider _timeProvider;
         private readonly ITimeSettings _timeSettings;

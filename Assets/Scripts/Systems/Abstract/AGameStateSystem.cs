@@ -20,6 +20,8 @@ namespace Systems.Abstract
         void IInitializeSystem.Initialize()
         {
             _gameStateProvider.AddGameStateListener(this);
+
+            OnInitialize();
         }
 
         void IGameStateListener.OnGameStateChanged()
@@ -28,6 +30,9 @@ namespace Systems.Abstract
         }
 
         protected abstract void OnStateChanged();
+        
+        protected virtual void OnInitialize()
+        {}
 
         void IDisposable.Dispose()
         {

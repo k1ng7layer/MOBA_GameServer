@@ -1,6 +1,7 @@
 using System;
 using Core.Systems;
 using Messages;
+using Models;
 using PBUnityMultiplayer.Runtime.Core.Server;
 using Services.CharacterPick;
 using Services.GameState;
@@ -14,28 +15,28 @@ namespace Systems
         IUpdateSystem
     {
         private readonly IGameStateProvider _gameStateProvider;
-        private readonly ICharacterPickTimerProvider _characterPickTimerProvider;
         private readonly INetworkServerManager _serverManager;
         private readonly IPlayerProvider _playerProvider;
+        private readonly IPickProvider _pickProvider;
 
         public CharacterPickSystem(
-            IGameStateProvider gameStateProvider, 
-            ICharacterPickTimerProvider characterPickTimerProvider,
+            IGameStateProvider gameStateProvider,
             INetworkServerManager serverManager,
-            IPlayerProvider playerProvider
+            IPlayerProvider playerProvider,
+            IPickProvider pickProvider
         ) : base(gameStateProvider)
         {
             _gameStateProvider = gameStateProvider;
-            _characterPickTimerProvider = characterPickTimerProvider;
             _serverManager = serverManager;
             _playerProvider = playerProvider;
+            _pickProvider = pickProvider;
         }
 
         public override EGameState GameState => EGameState.CharacterPick;
         
         protected override void OnStateChanged()
         {
-            _characterPickTimerProvider.StartTimer();
+            //_characterPickTimerProvider.StartTimer();
             //_characterPickTimerProvider.Elapsed += BeginFinalCountdown;
             
             _serverManager.RegisterMessageHandler<CharacterSelectMessage>(OnPlayerCharacterSelect);
@@ -71,8 +72,12 @@ namespace Systems
 
             var characterId = characterSelectMessage.CharacterId;
 
-            player.CharacterId = characterId;
+            var character = new CharacterDto
+            {
+                Id = characterId,
+            };
             
+            _pickProvider.AddCharacterPick(character, playerId);
         }
 
         private void OnCharacterPickAccepted(CharacterPickMessage characterPickMessage)
@@ -83,8 +88,9 @@ namespace Systems
             if(!hasPlayer)
                 return;
 
-            player.CharacterLocked = true;
-            player.CharacterId = characterPickMessage.CharacterId;
+            var selectedCharacter = _pickProvider.PickTable[playerId];
+
+            selectedCharacter.IsLocked = true;
 
             var lobbyIsReady = CheckAllPlayersPicked();
 
@@ -96,11 +102,11 @@ namespace Systems
 
         private bool CheckAllPlayersPicked()
         {
-            var players = _playerProvider.Players;
+            var players = _pickProvider.PickTable;
 
             foreach (var player in players.Values)
             {
-                if (!player.CharacterLocked)
+                if (!player.IsLocked)
                     return false;
             }
 
