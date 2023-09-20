@@ -1,7 +1,7 @@
 ﻿using Messages;
 using PBUnityMultiplayer.Runtime.Core.Server;
 using Services.GameState;
-using Services.PlayerProvider;
+using Services.PresenterRepository;
 using Systems.Abstract;
 using UnityEngine;
 
@@ -10,16 +10,16 @@ namespace Systems
     public class PlayerDestinationSystem : AGameStateSystem
     {
         private readonly INetworkServerManager _networkServerManager;
-        private readonly IPlayerProvider _playerProvider;
+        private readonly ICharacterPresenterRepository _characterPresenterRepository;
 
         public PlayerDestinationSystem(
             IGameStateProvider gameStateProvider, 
             INetworkServerManager networkServerManager,
-            IPlayerProvider playerProvider
+            ICharacterPresenterRepository characterPresenterRepository
         ) : base(gameStateProvider)
         {
             _networkServerManager = networkServerManager;
-            _playerProvider = playerProvider;
+            _characterPresenterRepository = characterPresenterRepository;
         }
 
         public override EGameState GameState => EGameState.Game;
@@ -31,16 +31,15 @@ namespace Systems
 
         private void OnPlayerDestinationRequestReceived(PlayerDestinationMessage message)
         {
-            var playerId = message.PlayerId;
+            var objectId = message.networkObjectId;
+            var destination = new Vector3(message.x, message.y, message.z);
 
-            var hasPlayer = _playerProvider.TryGet(playerId, out var player);
+            var hasPresenter = _characterPresenterRepository.TryGetPresenter(objectId, out var presenter);
             
-            if(!hasPlayer)
+            if(!hasPresenter)
                 return;
-
-            var destination = new Vector3(message.X, message.Y, message.Z);
             
-            player.Character.SetDestination(destination);
+            presenter.SetDestination(destination);
         }
     }
 }

@@ -1,6 +1,8 @@
 using Core.Systems.Impls;
 using Factories.Character;
 using Presenters;
+using Presenters.Character;
+using Presenters.Character.Impl;
 using Services.CharacterPick.Impl;
 using Services.CharacterSpawn.Impl;
 using Services.GameField;
@@ -8,6 +10,7 @@ using Services.GameField.Impl;
 using Services.GameState.Impl;
 using Services.GameTimer.Impl;
 using Services.PlayerProvider.Impl;
+using Services.PresenterRepository.Impl;
 using Services.Team.Impl;
 using Services.TimeProvider.Impl;
 using Systems;
@@ -29,6 +32,7 @@ namespace Installers.Game
             Container.BindInterfacesAndSelfTo<RandomTeamProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<PickProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<TeamSpawnService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CharacterPresenterRepository>().AsSingle();
             Container.BindInterfacesAndSelfTo<Bootstrap>().AsSingle();
 
             var gameFieldProvider = new GameFieldProvider(gameField);

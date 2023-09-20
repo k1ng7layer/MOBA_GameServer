@@ -25,6 +25,7 @@ namespace Views.Network
         { }
 
         public int OwnerId => _networkObject.OwnerId;
+        public int NetworkObjectId => _networkObject.Id;
 
     }
 }

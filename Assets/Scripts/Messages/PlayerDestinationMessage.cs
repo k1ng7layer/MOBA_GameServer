@@ -5,9 +5,10 @@ namespace Messages
     [Serializable]
     public struct PlayerDestinationMessage
     {
-        public int PlayerId;
-        public float X;
-        public float Y;
-        public float Z;
+        public int clientId;
+        public int networkObjectId;
+        public float x;
+        public float y;
+        public float z;
     }
 }

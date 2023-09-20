@@ -1,4 +1,6 @@
 ﻿using Presenters;
+using Presenters.Character;
+using Presenters.Character.Impl;
 using Views.Character.Impl;
 using Zenject;
 
