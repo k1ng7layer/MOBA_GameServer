@@ -1,5 +1,6 @@
 using System;
 using Core.Systems;
+using Messages;
 using PBUnityMultiplayer.Runtime.Configuration.Connection;
 using PBUnityMultiplayer.Runtime.Core.NetworkManager.Models;
 using PBUnityMultiplayer.Runtime.Core.Server;
@@ -49,7 +50,14 @@ namespace Systems
             var player = new Player(networkClient.Id, team);
             
             _playerProvider.AddPlayer(player);
-                
+
+            var teamMessage = new TeamAssignMessage
+            {
+                teamIndex = (int)team
+            };
+            
+            _serverManager.SendMessage(teamMessage, networkClient.Id);
+            
             if (_serverManager.ConnectedClients.Count == _networkConfiguration.MaxClients)
             {
                _gameStateProvider.SetState(EGameState.CharacterPick);

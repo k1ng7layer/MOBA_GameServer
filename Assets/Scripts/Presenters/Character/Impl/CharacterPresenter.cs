@@ -20,6 +20,7 @@ namespace Presenters.Character.Impl
 
         public void SetDestination(Vector3 destination)
         {
+          
             _characterView.SetDestination(destination);
         }
     }

@@ -39,6 +39,7 @@ namespace Systems
             if(!hasPresenter)
                 return;
             
+          
             presenter.SetDestination(destination);
         }
     }
