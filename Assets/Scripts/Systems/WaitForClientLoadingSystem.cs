@@ -3,6 +3,7 @@ using PBUnityMultiplayer.Runtime.Core.Server;
 using Services.GameState;
 using Services.PlayerProvider;
 using Systems.Abstract;
+using UnityEngine;
 
 namespace Systems
 {
@@ -39,16 +40,25 @@ namespace Systems
         {
             var playerId = message.ClientId;
             var hasPlayer = _playerProvider.Players.TryGetValue(playerId, out var player);
-            
+            Debug.Log($"OnClientLevelLoadingCompleted {playerId}, has = {hasPlayer}");
             if(!hasPlayer)
                 return;
 
             player.IsLoaded = true;
 
             var isAllReady = IsAllPlayersReady();
-            
-            if(isAllReady)
+
+            if (isAllReady)
+            {
                 _gameStateProvider.SetState(EGameState.Game);
+                var serverGameStateMsg = new ServerGameState
+                {
+                    gameStateId = (int)EGameState.Game
+                };
+            
+                _networkServerManager.SendMessage(serverGameStateMsg);
+            }
+              
         }
 
         private bool IsAllPlayersReady()

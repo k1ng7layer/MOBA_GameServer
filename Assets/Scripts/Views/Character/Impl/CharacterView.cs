@@ -16,8 +16,8 @@ namespace Views.Character.Impl
         public void SetDestination(Vector3 destination)
         {
             Debug.Log($"set destination {destination} for character id = { navMeshAgent.pathPending} ");
-            var target = new Vector3(destination.x, gameObject.transform.position.y, destination.z);
-            navMeshAgent.SetDestination(target);
+            //var target = new Vector3(destination.x, gameObject.transform.position.y, destination.z);
+            navMeshAgent.SetDestination(destination);
         }
 
         public void Initialize(int prefabId)
