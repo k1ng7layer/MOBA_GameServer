@@ -18,6 +18,10 @@ namespace Presenters.Character.Impl
             _character = character;
         }
 
+        public int CharacterNetworkId => _characterView.NetworkObjectId;
+        public Vector3 Position => _character.Position;
+        public Vector3 Destination => _character.Destination;
+
         public void SetDestination(Vector3 destination)
         {
             _characterView.SetDestination(destination);

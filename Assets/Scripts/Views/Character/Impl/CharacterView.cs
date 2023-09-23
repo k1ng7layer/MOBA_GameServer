@@ -12,17 +12,21 @@ namespace Views.Character.Impl
         [SerializeField] private NavMeshAgent navMeshAgent;
         
         public int PrefabId { get; private set; }
+        public Vector3 Position => transform.position;
         
         public void SetDestination(Vector3 destination)
         {
-            Debug.Log($"set destination {destination} for character id = { navMeshAgent.pathPending} ");
-            //var target = new Vector3(destination.x, gameObject.transform.position.y, destination.z);
             navMeshAgent.SetDestination(destination);
         }
-
+        
         public void Initialize(int prefabId)
         {
             PrefabId = prefabId;
+        }
+
+        public void SetOwnerId(int id)
+        {
+            
         }
     }
 }

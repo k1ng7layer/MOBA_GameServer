@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Views.Network
 {
     [RequireComponent(typeof(NetworkObject))]
-    public class NetworkView : MonoBehaviour
+    public class NetworkView : MonoBehaviour, INetworkView
     {
         private NetworkObject _networkObject;
         
@@ -25,6 +25,7 @@ namespace Views.Network
         { }
 
         public int OwnerId => _networkObject.OwnerId;
+        
         public int NetworkObjectId => _networkObject.Id;
 
     }

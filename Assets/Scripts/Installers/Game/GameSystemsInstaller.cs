@@ -15,6 +15,7 @@ namespace Installers.Game
             Container.BindInterfacesAndSelfTo<SpawnTeamSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerDestinationSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<CharacterProcessSystem>().AsSingle();
+            Container.BindInterfacesAndSelfTo<SynchronizePositionSystem>().AsSingle();
         }
     }
 }

@@ -4,7 +4,6 @@ using Factories.Character;
 using Models;
 using Presenters;
 using Presenters.Character;
-using Presenters.Character.Impl;
 using Services.CharacterSpawn;
 using Services.PresenterRepository;
 using UniRx;
@@ -18,7 +17,6 @@ namespace Systems
         private readonly CharacterPresenterFactory _characterPresenterFactory;
         private readonly ITeamSpawnService _teamSpawnService;
         private readonly ICharacterPresenterRepository _characterPresenterRepository;
-        private readonly List<CharacterPresenter> _characterPresenters = new();
 
         public CharacterProcessSystem(
             CharacterFactory characterFactory,
@@ -44,7 +42,6 @@ namespace Systems
                 var character = _characterFactory.Create();
                 var characterPresenter = _characterPresenterFactory.Create(characterView, character);
                 var networkId = characterView.NetworkObjectId;
-                _characterPresenters.Add(characterPresenter);
                 _characterPresenterRepository.Add(networkId, characterPresenter);
             }
         }

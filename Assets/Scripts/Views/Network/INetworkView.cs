@@ -2,7 +2,7 @@
 {
     public interface INetworkView
     {
+        int NetworkObjectId { get; }
         int OwnerId { get; }
-        void SetOwnerId(int id);
     }
 }
