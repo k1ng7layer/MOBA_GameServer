@@ -18,17 +18,20 @@ namespace Services.CharacterSpawn.Impl
         private readonly INetworkServerManager _networkServerManager;
         private readonly IGameFieldProvider _gameFieldProvider;
         private readonly IPickProvider _pickProvider;
+        private readonly IPlayerProvider _playerProvider;
         private readonly ReactiveCommand<List<CharacterView>> _teamSpawned = new();
 
         public TeamSpawnService(
             INetworkServerManager networkServerManager,
             IGameFieldProvider gameFieldProvider,
-            IPickProvider pickProvider
+            IPickProvider pickProvider,
+            IPlayerProvider playerProvider
         )
         {
             _networkServerManager = networkServerManager;
             _gameFieldProvider = gameFieldProvider;
             _pickProvider = pickProvider;
+            _playerProvider = playerProvider;
         }
 
         public IReactiveCommand<List<CharacterView>> TeamSpawned => _teamSpawned;
@@ -42,11 +45,12 @@ namespace Services.CharacterSpawn.Impl
                 : _gameFieldProvider.Field.BlueTeamLevelSettings;
 
             var result = new List<CharacterView>();
-            
-            foreach (var characterKvp in _pickProvider.PickTable)
+
+            var team = type == ETeamType.Red ? _playerProvider.RedTeam : _playerProvider.BlueTeam;
+            foreach (var player in team)
             {
-                var playerId = characterKvp.Key;
-                var characterDto = characterKvp.Value;
+                var playerId = player.Id;
+                var characterDto = _pickProvider.PickTable[playerId];
                 var characterId = characterDto.Id;
                 
                 var clients = _networkServerManager.ConnectedClients;
@@ -64,7 +68,7 @@ namespace Services.CharacterSpawn.Impl
                     ClientId = playerId
                 };
                 
-                var characterNetworkObject = _networkServerManager.Spawn(characterKvp.Value.Id, client, spawnTransform.position, spawnTransform.rotation, spawnMessage);
+                var characterNetworkObject = _networkServerManager.Spawn(characterId, client, spawnTransform.position, spawnTransform.rotation, spawnMessage);
             
                 spawnIndex++;
 
