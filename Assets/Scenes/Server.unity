@@ -201,13 +201,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   redTeamLevelSettings:
-    teamPlayersSpawnTransforms:
-    - playerId: 0
-      spawnTransform: {fileID: 356094157}
+  - {fileID: 356094157}
   blueTeamLevelSettings:
-    teamPlayersSpawnTransforms:
-    - playerId: 0
-      spawnTransform: {fileID: 1354968418}
+  - {fileID: 356094157}
 --- !u!1 &1354968417
 GameObject:
   m_ObjectHideFlags: 0

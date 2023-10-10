@@ -1,6 +1,6 @@
 ﻿namespace Services.PlayerProvider
 {
-    public enum ETeamType
+    public enum ETeam
     {
         Red,
         Blue

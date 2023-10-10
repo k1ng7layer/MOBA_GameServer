@@ -1,4 +1,7 @@
 using Systems;
+using Systems.CharacterPick;
+using Systems.Game;
+using Systems.Initialize;
 using Zenject;
 
 namespace Installers.Game
@@ -12,10 +15,9 @@ namespace Installers.Game
             Container.BindInterfacesAndSelfTo<CharacterPickSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<CharacterPickFinalCountdownSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<WaitForClientLoadingSystem>().AsSingle();
-            Container.BindInterfacesAndSelfTo<SpawnTeamSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerDestinationSystem>().AsSingle();
-            Container.BindInterfacesAndSelfTo<CharacterProcessSystem>().AsSingle();
             Container.BindInterfacesAndSelfTo<SynchronizePositionSystem>().AsSingle();
+            Container.BindInterfacesAndSelfTo<SpawnPlayersSystem>().AsSingle();
         }
     }
 }

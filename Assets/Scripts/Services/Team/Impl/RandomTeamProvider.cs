@@ -1,36 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using Extensions;
+using PBUnityMultiplayer.Runtime.Configuration.Server;
 using Services.PlayerProvider;
 
 namespace Services.Team.Impl
 {
     public class RandomTeamProvider : ITeamProvider
     {
-        private readonly Queue<ETeamType> _teamTypeQueue = new();
+        private readonly IServerConfiguration _serverConfiguration;
+        private readonly Queue<ETeam> _teamTypeQueue = new();
 
-        public RandomTeamProvider()
+        public RandomTeamProvider(IServerConfiguration serverConfiguration)
         {
+            _serverConfiguration = serverConfiguration;
             FillQueue();
         }
         
-        public ETeamType GetTeamType()
+        public ETeam GetTeamType()
         {
             return _teamTypeQueue.Dequeue();
         }
 
         private void FillQueue()
         {
-            var teamList = new List<ETeamType>();
+            var teamList = new List<ETeam>();
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < _serverConfiguration.MaxClients; i++)
             {
-                teamList.Add(ETeamType.Blue);
+                teamList.Add(ETeam.Blue);
             }
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < _serverConfiguration.MaxClients; i++)
             {
-                teamList.Add(ETeamType.Red);
+                teamList.Add(ETeam.Red);
             }
             
             teamList.Shuffle();

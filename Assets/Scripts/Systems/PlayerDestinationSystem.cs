@@ -1,4 +1,5 @@
 ﻿using Messages;
+using PBUdpTransport.Utils;
 using PBUnityMultiplayer.Runtime.Core.Server;
 using Services.GameState;
 using Services.PlayerProvider;
@@ -48,8 +49,8 @@ namespace Systems
             //send destination to all players
             foreach (var player in _playerProvider.Players)
             {
-                Debug.Log($"send destination to {player.Value.Id}");
-                _networkServerManager.SendMessage(message, player.Value.Id);
+                Debug.Log($"send destination to {player.Id}");
+                _networkServerManager.SendMessage( player.Id, message, ESendMode.Reliable);
             }
           
         }

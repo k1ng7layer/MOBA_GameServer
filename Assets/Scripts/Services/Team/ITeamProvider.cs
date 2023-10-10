@@ -4,6 +4,6 @@ namespace Services.Team
 {
     public interface ITeamProvider
     {
-        ETeamType GetTeamType();
+        ETeam GetTeamType();
     }
 }

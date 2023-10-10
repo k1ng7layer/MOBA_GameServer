@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6044936680376007860}
   - component: {fileID: 6044936680376007861}
-  - component: {fileID: 6044936680376007863}
+  - component: {fileID: 5944822050551036307}
+  - component: {fileID: 8879416763791617617}
   m_Layer: 0
   m_Name: NetworkServerManager
   m_TagString: Untagged
@@ -45,11 +46,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b717c2526c534d11bf30e5d5279cc0d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkConfiguration: {fileID: 11400000, guid: adfa19599da8049d1a1416b1bd84a41a, type: 2}
+  networkConfiguration: {fileID: 11400000, guid: cbfa2e310fe011e419be8d2c4cb22548, type: 2}
   networkPrefabsBase: {fileID: 11400000, guid: cfd91d347a27a4ec4bed3b638f41b371, type: 2}
   useAuthentication: 1
-  transportBase: {fileID: 6044936680376007863}
---- !u!114 &6044936680376007863
+  transportBase: {fileID: 8879416763791617617}
+  serverAuthentication: {fileID: 5944822050551036307}
+--- !u!114 &5944822050551036307
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -58,6 +60,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 6044936680376007858}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49dd3a5d28964b54b9579a94bae5de93, type: 3}
+  m_Script: {fileID: 11500000, guid: 26f84afd2d6c47b8a1b0decc4620ba29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serverPassword: 12
+--- !u!114 &8879416763791617617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6044936680376007858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eda0b10c2b1841fd9eba9079c04aac76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

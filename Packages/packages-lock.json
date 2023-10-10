@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.coffee.upm-git-extension": {
+      "version": "https://github.com/mob-sakai/UpmGitExtension.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "d0c1cbb5415f5accf6a1d49d1dc91cf7d4fb11b9"
+    },
     "com.unity.collab-proxy": {
       "version": "2.0.3",
       "depth": 0,
@@ -136,11 +143,11 @@
       "url": "https://packages.unity.com"
     },
     "pbunitymultiplayer": {
-      "version": "https://github.com/k1ng7layer/PBUnityMultiplayer.git",
+      "version": "https://github.com/k1ng7layer/PBUnityMultiplayer.git#1.1.0",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "7d41540b7889c80b58fe0cc80eca6c2761663a30"
+      "hash": "518c63247ffbf7e00e03c6a1a6c2154ea8e64bcc"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

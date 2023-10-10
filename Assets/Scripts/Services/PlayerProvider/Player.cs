@@ -1,4 +1,5 @@
 ﻿using Models;
+using Services.GameState;
 using Views.Character;
 using Views.Character.Impl;
 
@@ -8,13 +9,16 @@ namespace Services.PlayerProvider
     {
         public bool IsLoaded;
 
-        public Player(int id, ETeamType teamType)
+        public Player(int id, ETeam team)
         {
             Id = id;
-            TeamType = teamType;
+            Team = team;
         }
         
         public int Id { get; }
-        public ETeamType TeamType { get; }
+        public ETeam Team { get; }
+        public EGameState GameState { get; set; }
+        public int CharacterId { get; set; }
+        public bool CharacterLocked { get; set; }
     }
 }

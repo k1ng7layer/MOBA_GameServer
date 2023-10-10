@@ -1,32 +1,48 @@
 using System;
 using System.Collections.Generic;
+using Core.Systems;
+using Messages;
+using PBUdpTransport.Utils;
+using PBUnityMultiplayer.Runtime.Core.Server;
+using Services.PlayerProvider;
 using UnityEngine;
+using Zenject;
 
 namespace Services.GameState.Impl
 {
-    public class GameStateProvider : IGameStateProvider
+    public class GameStateProvider : IGameStateProvider, 
+        IInitializable, IDisposable
     {
+        private readonly INetworkServerManager _networkServerManager;
+        private readonly IPlayerProvider _playerProvider;
         private readonly Dictionary<EGameState, HashSet<IGameStateListener>> _gameStateListeners = new();
+        private readonly Queue<EGameState> _gameStatesQueue = new();
+
+        public GameStateProvider(
+            INetworkServerManager networkServerManager, 
+            IPlayerProvider playerProvider
+        )
+        {
+            _networkServerManager = networkServerManager;
+            _playerProvider = playerProvider;
+        }
+        
         public event Action<EGameState> GameStateChanged;
         public EGameState CurrentState { get; private set; }
         
         public void SetState(EGameState gameState)
         {
-            CurrentState = gameState;
-            
-            GameStateChanged?.Invoke(gameState);
-
-            var hasListeners = _gameStateListeners.TryGetValue(gameState, out var listeners);
-
-            if (hasListeners)
+            foreach (var client in _networkServerManager.Clients)
             {
-                foreach (var listener in listeners)
+                _networkServerManager.SendMessage(client.Id, new ServerGameState
                 {
-                    listener.OnGameStateChanged();
-                }
+                    gameStateId = (int)gameState
+                }, ESendMode.Reliable);
             }
+       
             
-            Debug.Log($"[{nameof(GameStateProvider)}] set game state {gameState}");
+            Debug.Log($"server SetState to queue {gameState}");
+            _gameStatesQueue.Enqueue(gameState);
         }
 
         public void AddGameStateListener(IGameStateListener gameStateListener)
@@ -48,6 +64,77 @@ namespace Services.GameState.Impl
             {
                 listeners.Remove(gameStateListener);
             }
+        }
+
+        public void Initialize()
+        {
+            _networkServerManager.ServerStarted += OnServerStart;
+        }
+
+        private void OnServerStart()
+        {
+            _networkServerManager.RegisterMessageHandler<ClientStateReadyMessage>(OnClientStateChanged);
+        }
+
+        private void OnClientStateChanged(ClientStateReadyMessage message)
+        {
+            
+            var hasClient = _playerProvider.TryGet(message.clientId, out var player);
+            
+            if(!hasClient)
+                return;
+
+            var state = (EGameState)message.stateId;
+            
+            Debug.Log($"server OnClientStateChanged state to {state}, client id {message.clientId}");
+
+            player.GameState = state;
+
+            var nextState = _gameStatesQueue.Peek();
+            
+            var allClientsReady = ClientHasState(nextState);
+
+            if (allClientsReady)
+            {
+                nextState = _gameStatesQueue.Dequeue();
+                Debug.Log($"server switch state to {nextState}");
+                SwitchState(nextState);
+            }
+        }
+
+        private void SwitchState(EGameState state)
+        {
+            CurrentState = state;
+            
+            GameStateChanged?.Invoke(state);
+
+            var hasListeners = _gameStateListeners.TryGetValue(state, out var listeners);
+
+            if (hasListeners)
+            {
+                foreach (var listener in listeners)
+                {
+                    listener.OnGameStateChanged();
+                }
+            }
+            
+            //Debug.Log($"[{nameof(GameStateProvider)}] set game state {state}");
+        }
+
+        private bool ClientHasState(EGameState gameState)
+        {
+            foreach (var player in _playerProvider.Players)
+            {
+                if (player.GameState != gameState)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public void Dispose()
+        {
+            _networkServerManager.ServerStarted -= OnServerStart;
         }
     }
 }

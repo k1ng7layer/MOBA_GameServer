@@ -1,6 +1,7 @@
 using PBUnityMultiplayer.Runtime.Core.Server;
 using PBUnityMultiplayer.Runtime.Core.Server.Impl;
 using Services.GameState.Impl;
+using Services.PlayerProvider.Impl;
 using Systems;
 using UnityEngine;
 using Zenject;
@@ -18,6 +19,7 @@ namespace Installers.Project
                 .AsSingle().NonLazy();
             
             Container.BindInterfacesAndSelfTo<GameStateProvider>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerProvider>().AsSingle();
         }
     }
 }

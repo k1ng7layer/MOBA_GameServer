@@ -4,7 +4,8 @@ namespace Services.PlayerProvider
 {
     public interface IPlayerProvider
     {
-        IReadOnlyDictionary<int, Player> Players { get; }
+        IEnumerable<Player> Players { get; }
+        IReadOnlyDictionary<int, Player> PlayersTable { get; }
         IReadOnlyList<Player> RedTeam { get; }
         IReadOnlyList<Player> BlueTeam { get; }
         void AddPlayer(Player player);

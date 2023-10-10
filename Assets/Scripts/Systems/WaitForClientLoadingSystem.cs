@@ -24,22 +24,27 @@ namespace Systems
         }
 
         public override EGameState GameState => EGameState.ClientLoading;
-        
+
+        protected override void OnInitialize() 
+        {
+            _networkServerManager.RegisterMessageHandler<ClientLoadingCompleteMessage>(OnClientLevelLoadingCompleted);
+        }
+
         protected override void OnStateChanged()
         {
             //TODO: add loading timeout
-            _networkServerManager.RegisterMessageHandler<ClientLoadingCompleteMessage>(OnClientLevelLoadingCompleted);
-            var message = new ServerGameState()
-            {
-                gameStateId = (int)EGameState.ClientLoading
-            };
-            _networkServerManager.SendMessage(message);
+           
+            // var message = new ServerGameState()
+            // {
+            //     gameStateId = (int)EGameState.ClientLoading
+            // };
+            // _networkServerManager.SendMessage(message);
         }
 
         private void OnClientLevelLoadingCompleted(ClientLoadingCompleteMessage message)
         {
-            var playerId = message.ClientId;
-            var hasPlayer = _playerProvider.Players.TryGetValue(playerId, out var player);
+            var playerId = message.clientId;
+            var hasPlayer = _playerProvider.PlayersTable.TryGetValue(playerId, out var player);
             Debug.Log($"OnClientLevelLoadingCompleted {playerId}, has = {hasPlayer}");
             if(!hasPlayer)
                 return;
@@ -50,23 +55,20 @@ namespace Systems
 
             if (isAllReady)
             {
+                Debug.Log($"all clients is ready");
                 _gameStateProvider.SetState(EGameState.Game);
-                var serverGameStateMsg = new ServerGameState
-                {
-                    gameStateId = (int)EGameState.Game
-                };
-            
-                _networkServerManager.SendMessage(serverGameStateMsg);
             }
               
         }
 
         private bool IsAllPlayersReady()
         {
-            foreach (var gamePlayer in _playerProvider.Players.Values)
+            foreach (var gamePlayer in _playerProvider.Players)
             {
                 if (!gamePlayer.IsLoaded)
                     return false;
+                
+                Debug.Log($"gamePlayer id {gamePlayer.Id} is loaded = {gamePlayer.IsLoaded}");
             }
 
             return true;

@@ -4,11 +4,25 @@ namespace Services.PlayerProvider.Impl
 {
     public class PlayerProvider : IPlayerProvider
     {
-        private readonly Dictionary<int, Player> _players = new();
+        private readonly Dictionary<int, Player> _playersTable = new();
         private readonly List<Player> _redTeam = new();
         private readonly List<Player> _blueTeam = new();
+        private IEnumerable<Player> _players;
 
-        public IReadOnlyDictionary<int, Player> Players => _players;
+        public IEnumerable<Player> Players
+        {
+            get
+            {
+                if (_players == null)
+                {
+                    _players = _playersTable.Values;
+                }
+
+                return _players;
+            }
+        }
+
+        public IReadOnlyDictionary<int, Player> PlayersTable => _playersTable;
 
         public IReadOnlyList<Player> RedTeam => _redTeam;
 
@@ -16,20 +30,20 @@ namespace Services.PlayerProvider.Impl
 
         public bool TryGet(int id, out Player player)
         {
-            return _players.TryGetValue(id, out player);
+            return _playersTable.TryGetValue(id, out player);
         }
 
         public void Remove(Player player)
         {
-            if (_players.ContainsKey(player.Id))
-                _players.Remove(player.Id);
+            if (_playersTable.ContainsKey(player.Id))
+                _playersTable.Remove(player.Id);
         }
 
         public void AddPlayer(Player player)
         {
-            _players.Add(player.Id, player);
+            _playersTable.Add(player.Id, player);
             
-            if (player.TeamType == ETeamType.Blue)
+            if (player.Team == ETeam.Blue)
                 _blueTeam.Add(player);
             else _redTeam.Add(player);
         }

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serverIp: 127.0.0.1
   serverPort: 7779
-  localIp: 127.0.0.1
+  localIp: 192.168.1.234
   localPort: 7777
   connectionTimeOut: 0
   clientCheckAliveTimeOut: 5000
@@ -22,4 +22,6 @@ MonoBehaviour:
   clientCheckAliveTime: 3000
   serverCheckAliveTime: 4000
   serverCheckAliveTimeSent: 2000
-  maxClients: 1
+  maxClients: 2
+  serverTickRate: 1
+  clientTickRateDivergence: 5

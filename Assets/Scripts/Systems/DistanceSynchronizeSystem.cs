@@ -1,5 +1,6 @@
 ﻿using Core.Systems;
 using Messages;
+using PBUdpTransport.Utils;
 using PBUnityMultiplayer.Runtime.Core.Server;
 using Services.GameState;
 using Services.PresenterRepository;
@@ -50,7 +51,7 @@ namespace Systems
                     actualZ = position.z,
                 };
                 
-                _networkServerManager.SendMessage(syncMessage);
+                _networkServerManager.SendMessage(syncMessage, ESendMode.Reliable);
             }
         }
     }

@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeSettings: {fileID: 11400000, guid: 94b915122d0d4411ca93ff81cdb29c6f, type: 2}
   networkConfiguration: {fileID: 11400000, guid: adfa19599da8049d1a1416b1bd84a41a, type: 2}
+  networkPrefabsBase: {fileID: 11400000, guid: cfd91d347a27a4ec4bed3b638f41b371, type: 2}
+  serverConfiguration: {fileID: 11400000, guid: cbfa2e310fe011e419be8d2c4cb22548, type: 2}

@@ -1,5 +1,7 @@
 using Core.Systems.Impls;
 using Factories.Character;
+using PBUnityMultiplayer.Runtime.Utils.IdGenerator;
+using PBUnityMultiplayer.Runtime.Utils.IdGenerator.Impl;
 using Presenters;
 using Presenters.Character;
 using Presenters.Character.Impl;
@@ -9,6 +11,7 @@ using Services.GameField;
 using Services.GameField.Impl;
 using Services.GameState.Impl;
 using Services.GameTimer.Impl;
+using Services.Ownership.Impl;
 using Services.PlayerProvider.Impl;
 using Services.PresenterRepository.Impl;
 using Services.Team.Impl;
@@ -28,11 +31,12 @@ namespace Installers.Game
         {
             Container.BindInterfacesAndSelfTo<UnityTimeProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameTimerProvider>().AsSingle();
-            Container.BindInterfacesAndSelfTo<PlayerProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<RandomTeamProvider>().AsSingle();
+            Container.BindInterfacesAndSelfTo<NetworkOwnershipRepository>().AsSingle();
             Container.BindInterfacesAndSelfTo<PickProvider>().AsSingle();
-            Container.BindInterfacesAndSelfTo<TeamSpawnService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<SpawnManager>().AsSingle();
             Container.BindInterfacesAndSelfTo<CharacterPresenterRepository>().AsSingle();
+            Container.Bind<IIdGenerator<ushort>>().To<NetworkObjectIdGenerator>().AsSingle();
             Container.BindInterfacesAndSelfTo<Bootstrap>().AsSingle();
 
             var gameFieldProvider = new GameFieldProvider(gameField);

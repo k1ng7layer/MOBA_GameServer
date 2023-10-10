@@ -1,5 +1,6 @@
 ﻿using Core.Systems;
 using Messages;
+using PBUdpTransport.Utils;
 using PBUnityMultiplayer.Runtime.Core.Server;
 using Services.GameState;
 using Services.GameTimer;
@@ -7,7 +8,7 @@ using Settings.TimeSettings;
 using Systems.Abstract;
 using Utils;
 
-namespace Systems
+namespace Systems.CharacterPick
 {
     public class CharacterPickFinalCountdownSystem : AGameStateSystem, 
         IUpdateSystem
@@ -52,7 +53,7 @@ namespace Systems
             if(!hasTimer)
                 return;
             
-            _networkServerManager.SendMessage(new CharacterPickFinalTimer(timer.Value));
+            _networkServerManager.SendMessage(new CharacterPickFinalTimer(timer.Value), ESendMode.Reliable);
         }
     }
 }

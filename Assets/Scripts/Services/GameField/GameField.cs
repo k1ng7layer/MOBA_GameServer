@@ -6,11 +6,11 @@ namespace Services.GameField
     public class GameField : MonoBehaviour
     {
         [Header("Red team settings")] 
-        [SerializeField] private TeamLevelSettings redTeamLevelSettings;
+        [SerializeField] private Transform[] redTeamLevelSettings;
         [Header("Blue team settings")] 
-        [SerializeField] private TeamLevelSettings blueTeamLevelSettings;
+        [SerializeField] private Transform[] blueTeamLevelSettings;
 
-        public TeamLevelSettings RedTeamLevelSettings => redTeamLevelSettings;
-        public TeamLevelSettings BlueTeamLevelSettings => blueTeamLevelSettings;
+        public Transform[] RedTeamLevelSettings => redTeamLevelSettings;
+        public Transform[] BlueTeamLevelSettings => blueTeamLevelSettings;
     }
 }

@@ -1,11 +1,12 @@
 using System;
 using Core.Systems;
 using Messages;
+using PBUdpTransport.Utils;
 using PBUnityMultiplayer.Runtime.Core.Server;
 using Services.TimeProvider;
 using Settings.TimeSettings;
 
-namespace Systems
+namespace Systems.CharacterPick
 {
     public class CharacterPickTimerSystem :
         IUpdateSystem
@@ -53,7 +54,7 @@ namespace Systems
             
             Value += _timeProvider.DeltaTime;
             
-            _networkServerManager.SendMessage(new CharacterPickTimerMessage(Value));
+            _networkServerManager.SendMessage(new CharacterPickTimerMessage(Value), ESendMode.Reliable);
         }
     }
 }

@@ -3,8 +3,9 @@
 namespace Messages
 {
     [Serializable]
-    public struct ClientLoadingCompleteMessage
+    public struct ClientStateReadyMessage
     {
         public int clientId;
+        public int stateId;
     }
 }

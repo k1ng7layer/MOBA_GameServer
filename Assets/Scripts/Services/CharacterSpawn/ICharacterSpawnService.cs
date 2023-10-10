@@ -11,6 +11,6 @@ namespace Services.CharacterSpawn
     public interface ITeamSpawnService
     {
         IReactiveCommand<List<CharacterView>> TeamSpawned { get; }
-        List<CharacterView> Spawn(ETeamType type);
+        List<CharacterView> Spawn(ETeam type);
     }
 }
